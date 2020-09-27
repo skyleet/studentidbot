@@ -73,6 +73,9 @@ def whois(update, context):
     if arg.startswith('@'): arg = arg[1:]
     nicks.append(arg)
   nicks = sorted(set(nicks))
+  if not nicks:
+    update.message.reply_text('Please specify at least a username!')
+    return
   logger.info("User %s asked for %s.", user.first_name, ', '.join(nicks))
   reply = []
   for nick in  nicks:
