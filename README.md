@@ -18,9 +18,15 @@ with `@`).
 
 ## Instructions
 
-Once obtained a *token* from the [BotFather](https://telegram.me/BotFather)
-store it in an environment variable named `TOKEN` and run the bot with
+The bot is based on the
+[python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot)
+library, so you should first install it, if you are new to Python, follow the nice
+"[Installing Packages](https://packaging.python.org/tutorials/installing-packages/)" tutorial by the [Python Packaging Authority](https://www.pypa.io/).
+
+Then, once obtained a *token* from the
+[BotFather](https://telegram.me/BotFather) store it in an environment variable
+named `TOKEN` and run the bot with
 
     python studentidbot.py
 
-collected data is persisted in `persistence_data.pickle` across runs.
+Collected data is persisted in `persistence_data.pickle` across runs.
