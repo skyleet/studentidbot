@@ -5,15 +5,15 @@
 This repository contains a simple [Telegram bot](https://core.telegram.org/bots)
 that allows students taking part to group chats to voluntarily submit their real
 identities (first and last name and identity number) to allow the teacher and
-other students to connect their nicknames to their real identity.
+other students to connect their usernames to their real identity.
 
 Every group chat participant can issue the `/askme` command that will ask
-him/her a few questions to create an association from the participant *nickname*
+him/her a few questions to create an association from the participant *username*
 to the answered identity; if the participant changes his/her mind, the
 association can be erased at any time with the `/forgetme` command.
 
 Other group chat participants can query the association with the command
-`/whois` followed by a list of space separated *nicknames* (possibly starting
+`/whois` followed by a list of space separated *usernames* (possibly starting
 with `@`).
 
 ## Instructions
@@ -29,4 +29,5 @@ named `TOKEN` and run the bot with
 
     python studentidbot.py
 
-Collected data is persisted in `persistence_data.pickle` across runs.
+Collected data is persisted in `persistence_data.pickle` across runs; the
+`dump_data.py` script can be used to quickly inspect the known usernames.
