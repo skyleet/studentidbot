@@ -55,9 +55,10 @@ def db_query(chat_title, query):
     select = 'SELECT sid, real_first_name, real_last_name FROM realids WHERE chat_title=:chat_title AND username=:username'
     params = {'chat_title': chat_title, 'username': query[0][1:]}
   else:
-    select = 'SELECT sid, real_first_name, real_last_name FROM realids WHERE chat_title=:chat_title AND COALESCE(first_name, '') || COALESCE(last_name, '') LIKE :like'
+    select = 'SELECT sid, real_first_name, real_last_name FROM realids WHERE chat_title=:chat_title AND COALESCE(first_name, "") || COALESCE(last_name, "") LIKE :like'
     params = {'chat_title': chat_title, 'like': '%' + '%'.join(query) + '%'}
   with dblock, database:
+    print(select)
     cur = database.execute(select, params)
     rows = cur.fetchall()
   if rows:
