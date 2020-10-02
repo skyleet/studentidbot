@@ -55,11 +55,11 @@ def db_query(chat_title, query):
     select = 'SELECT sid, real_first_name, real_last_name FROM realids WHERE chat_title=:chat_title AND username=:username'
     params = {'chat_title': chat_title, 'username': query[0][1:]}
   else:
-    select = 'SELECT sid, real_first_name, real_last_name FROM realids WHERE chat_title=:chat_title AND first_name || last_name LIKE :like'
+    select = 'SELECT sid, real_first_name, real_last_name FROM realids WHERE chat_title=:chat_title AND COALESCE(first_name, '') || COALESCE(last_name, '') LIKE :like'
     params = {'chat_title': chat_title, 'like': '%' + '%'.join(query) + '%'}
   with dblock, database:
     cur = database.execute(select, params)
-  rows = cur.fetchall()
+    rows = cur.fetchall()
   if rows:
     result = [f'In {chat_title} chat `{" ".join(query)}` information are:']
     for row in rows:
@@ -82,8 +82,9 @@ def askme(update, context):
     'chat_id': chat.id,
     'chat_title': chat.title,
   }
+  greet = user.username if user.username else ' '.join([user.first_name, user.last_name])
   update.message.reply_text(
-    f'Hi *{user.username}*, I am the Student Identities Bot. I will now ask you some questions, '
+    f'Hi *{greet}*, I am the Student Identities Bot. I will now ask you some questions, '
     'feel free to use /cancel at any time to stop this conversation, if you make a mistake just start over with /askme.\n\n'
     'What is your student *ID number*?',
   reply_markup = ForceReply())
