@@ -14,13 +14,22 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
                     level=logging.INFO)
 
 logger = logging.getLogger(__name__)
-database = sqlite3.connect('studentidbot.db', check_same_thread = False)
+database = None
 dblock = Lock()
 
 RealID = namedtuple('RealID', 'id, username, first_name, last_name, chat_id, chat_title, sid, real_first_name, real_last_name')
 START, STUDENTID, FIRSTNAME, LASTNAME = range(4)
 
+def db_close():
+  global database
+  database.commit()
+  database.close()
+  database = None
+  logging.info('Database commited and closed')
+
 def db_init():
+  global database
+  database = sqlite3.connect('studentidbot.db', check_same_thread = False)
   try:
     with dblock, database:
       database.execute("""
@@ -170,6 +179,7 @@ def main(token):
   dp.add_error_handler(error)
   updater.start_polling()
   updater.idle()
+  db_close()
 
 if __name__ == '__main__':
   import os

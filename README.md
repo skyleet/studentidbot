@@ -35,7 +35,7 @@ named `TOKEN` and run (a **single instance** per token of) the bot with
 
 It's also possible to run it using [Docker](https://www.docker.com/), just run
 
-    docker run -e TOKEN=$TOKEN -v $(pwd):/app -d mapio/studentidbot
+    docker run --name studetidbot -e TOKEN=$TOKEN -v $(pwd):/app -d mapio/studentidbot:last
 
 Collected data is persisted across runs as a [SQLite](https://www.sqlite.org/)
 database in `studentidbot.db`; you can use
@@ -43,3 +43,10 @@ database in `studentidbot.db`; you can use
     sqlite3 -header -column studentidbot.db 'select * from realids;'
 
 to inspect the collected information.
+
+### Stopping the bot
+
+To stop the bot, use a `TERM` signal, to be sure that the database will be
+committed and closed (this is reported in the logs). If using Docker, run
+
+    docker kill --signal=TERM studetidbot
