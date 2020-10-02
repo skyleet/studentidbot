@@ -35,7 +35,7 @@ named `TOKEN` and run (a **single instance** per token of) the bot with
 
 It's also possible to run it using [Docker](https://www.docker.com/), just run
 
-    docker run --name studetidbot -e TOKEN=$TOKEN -v $(pwd):/app -d mapio/studentidbot:last
+    docker run --name studetidbot -e TOKEN=$TOKEN -v $(pwd):/app -d mapio/studentidbot:latest
 
 Collected data is persisted across runs as a [SQLite](https://www.sqlite.org/)
 database in `studentidbot.db`; you can use
