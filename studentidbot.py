@@ -125,7 +125,6 @@ def lastname(update, context):
   lname = update.message.text.strip()
   logger.info("Student lastname of %s is %s", user.first_name, lname)
   context.chat_data[user.id]['real_last_name'] = lname
-  print(context.chat_data[user.id])
   db_replace(context.chat_data[user.id])
   del context.chat_data[user.id]
   update.message.reply_text(f'Thank you, your identity has been recorded for the group *{chat.title}*.')
