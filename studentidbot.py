@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+__version__ = '0.2.0'
+
 from collections import namedtuple
 import logging
 from threading import Lock
@@ -78,7 +80,7 @@ def db_query(chat_title, query):
     return f'No information found for `{" ".join(query)}` in {chat_title} chat.'
 
 def error(update, context):
-  logger.warning('Update "%s" caused error "%s"', update, context.error)
+  logger.warning(f'Update {update} caused error:', exc_info = context.error)
 
 def _gas(obj, key):
   res = getattr(obj, key, None)
@@ -95,7 +97,9 @@ def askme(update, context):
     'chat_id': chat.id,
     'chat_title': _gas(chat, 'title'),
   }
-  greet = user.username if user.username else ' '.join([_gas(user, 'first_name'), _gas(user, 'first_name')])
+  greet = _gas(user, 'username')
+  if not greet:
+    greet = ' '.join([_gas(user, 'first_name'), _gas(user, 'last_name')])
   update.message.reply_text(
     f'Hi *{greet}*, I am the Student Identities Bot. I will now ask you some questions, '
     'feel free to use /cancel at any time to stop this conversation, if you make a mistake just start over with /askme.\n\n'
@@ -157,6 +161,7 @@ def forgetme(update, context):
     update.message.reply_text(f'You real identity was not known in group *{chat.title}*.')
 
 def main(token):
+  logging.info(f'StudentIDBot version {__version__} starting…')
   db_init()
   defaults = Defaults(parse_mode = ParseMode.MARKDOWN)
   updater = Updater(token, defaults = defaults, use_context = True)
