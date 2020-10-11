@@ -85,11 +85,11 @@ def askme(update, context):
   user = update.message.from_user
   context.chat_data[user.id] = {
     'id': user.id,
-    'username': user.username,
-    'first_name': user.first_name,
-    'last_name': user.last_name,
+    'username': user.username if hasattr(user, 'username') and user.username is not None else '',
+    'first_name': user.first_name if hasattr(user, 'first_name') and user.first_name is not None else '',
+    'last_name': user.last_name if hasattr(user, 'last_name') and user.last_name is not None else '',
     'chat_id': chat.id,
-    'chat_title': chat.title,
+    'chat_title': chat.title if hasattr(chat, 'title') and chat.title is not None else '',
   }
   greet = user.username if user.username else ' '.join([user.first_name, user.last_name])
   update.message.reply_text(
