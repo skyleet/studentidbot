@@ -80,18 +80,22 @@ def db_query(chat_title, query):
 def error(update, context):
   logger.warning('Update "%s" caused error "%s"', update, context.error)
 
+def _gas(obj, key):
+  res = getattr(obj, key, None)
+  return '' if res is None else res
+
 def askme(update, context):
   chat = update.message.chat
   user = update.message.from_user
   context.chat_data[user.id] = {
     'id': user.id,
-    'username': user.username if hasattr(user, 'username') and user.username is not None else '',
-    'first_name': user.first_name if hasattr(user, 'first_name') and user.first_name is not None else '',
-    'last_name': user.last_name if hasattr(user, 'last_name') and user.last_name is not None else '',
+    'username': _gas(user, 'username'),
+    'first_name': _gas(user, 'first_name'),
+    'last_name': _gas(user, 'last_name'),
     'chat_id': chat.id,
-    'chat_title': chat.title if hasattr(chat, 'title') and chat.title is not None else '',
+    'chat_title': _gas(chat, 'title'),
   }
-  greet = user.username if user.username else ' '.join([user.first_name, user.last_name])
+  greet = user.username if user.username else ' '.join([_gas(user, 'first_name'), _gas(user, 'first_name')])
   update.message.reply_text(
     f'Hi *{greet}*, I am the Student Identities Bot. I will now ask you some questions, '
     'feel free to use /cancel at any time to stop this conversation, if you make a mistake just start over with /askme.\n\n'
