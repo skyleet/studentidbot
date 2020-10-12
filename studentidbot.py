@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-__version__ = '0.2.1'
+__version__ = '0.2.2'
 
-from collections import namedtuple
 import logging
-from threading import Lock
 import sqlite3
+from collections import namedtuple
+from threading import Lock
 
-from telegram import ForceReply, ParseMode
+from telegram import ForceReply, ParseMode, ReplyKeyboardRemove
 from telegram.ext import (CommandHandler, ConversationHandler, Defaults,
-                          Filters, MessageHandler, PicklePersistence, Updater)
+                          Filters, MessageHandler, Updater)
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -86,6 +86,9 @@ def _gas(obj, key):
   res = getattr(obj, key, None)
   return '' if res is None else res
 
+def version(update, context):
+  update.message.reply_text(f'This is StudentIDBot version {__version__}.')
+
 def askme(update, context):
   chat = update.message.chat
   user = update.message.from_user
@@ -131,14 +134,23 @@ def lastname(update, context):
   context.chat_data[user.id]['real_last_name'] = lname
   db_replace(context.chat_data[user.id])
   del context.chat_data[user.id]
-  update.message.reply_text(f'Thank you, your identity has been recorded for the group *{chat.title}*.')
+  update.message.reply_text(
+    f'Thank you, your identity has been recorded for the group *{chat.title}*.',
+    reply_markup = ReplyKeyboardRemove()
+  )
   return ConversationHandler.END
 
 def cancel(update, context):
   user = update.message.from_user
   logger.info("User %s canceled the conversation.", user.first_name)
-  del context.chat_data[user.username]
-  update.message.reply_text('Your identity has not been recorded; you can use /askme to start over.')
+  try:
+    del context.chat_data[user.username]
+  except KeyError:
+    pass
+  update.message.reply_text(
+    'Your identity has not been recorded; you can use /askme to start over.',
+    reply_markup = ReplyKeyboardRemove()
+  )
   return ConversationHandler.END
 
 def whois(update, context):
@@ -173,17 +185,11 @@ def main(token):
           FIRSTNAME: [MessageHandler(Filters.text & ~Filters.command, firstname, pass_chat_data = True)],
           LASTNAME: [MessageHandler(Filters.text & ~Filters.command, lastname, pass_chat_data = True)]
       },
-      fallbacks = [CommandHandler('cancel', cancel)]
+      fallbacks = [CommandHandler('cancel', cancel, pass_chat_data = True)]
   ))
-  dp.add_handler(CommandHandler(
-    'whois', whois,
-    pass_args = True,
-    pass_chat_data = True
-  ))
-  dp.add_handler(CommandHandler(
-    'forgetme', forgetme,
-    pass_chat_data = True
-  ))
+  dp.add_handler(CommandHandler('whois', whois, pass_args = True))
+  dp.add_handler(CommandHandler('forgetme', forgetme))
+  dp.add_handler(CommandHandler('version', version))
   dp.add_error_handler(error)
   updater.start_polling()
   updater.idle()
