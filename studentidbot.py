@@ -72,9 +72,9 @@ def db_query(chat_title, query):
     cur = database.execute(select, params)
     rows = cur.fetchall()
   if rows:
-    result = [f'In {chat_title} chat `{" ".join(query)}` information are:']
+    result = [f'Identity:']
     for row in rows:
-      result.append(f'{row[1]} {row[2]} ({row[0]})')
+      result.append(f'{row[1]} {row[2]} (AIR: {row[0]})')
     return '\n'.join(result)
   else:
     return f'No information found for `{" ".join(query)}` in {chat_title} chat.'
