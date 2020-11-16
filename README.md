@@ -1,5 +1,13 @@
 # Student Identities Bot
 
+
+
+# Deploy
+Deploy to Heroku:
+<p align="left"><a href="https://heroku.com/deploy"> <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy to Heroku" /></a></p>
+
+
+
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 
 This repository contains a simple [Telegram bot](https://core.telegram.org/bots)
