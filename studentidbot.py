@@ -106,7 +106,7 @@ def askme(update, context):
   update.message.reply_text(
     f'Hi *{greet}*, I am the Student Identities Bot. I will now ask you some questions, '
     'feel free to use /cancel at any time to stop this conversation, if you make a mistake just start over with /askme.\n\n'
-    'What is your student *ID number*?',
+    'What is your *CGL18 AIR*?',
   reply_markup = ForceReply())
   return STUDENTID
 
